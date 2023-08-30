@@ -1,3 +1,76 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next", "prettier"],
+  "rules": {
+    "radix": "off",
+    "no-console": "warn",
+    "arrow-parens": ["error", "as-needed"],
+    "semi": "error",
+    "no-undef": "error",
+    "eol-last": ["error", "always"],
+    "no-unused-vars": ["error"],
+    "react/jsx-wrap-multilines": ["error", { "declaration": false, "assignment": false }],
+    "react/require-default-props": [
+      1,
+      {
+        "forbidDefaultForRequired": true,
+        "functions": "defaultArguments"
+      }
+    ],
+    "jsx-a11y/href-no-hash": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/no-noninteractive-element-interactions": 0,
+    "react/jsx-props-no-spreading": "off",
+    "import/prefer-default-export": "off",
+    "react/prop-types": "off",
+    "object-curly-spacing": ["error", "always", { "arraysInObjects": true, "objectsInObjects": true }],
+    "react/state-in-constructor": "off",
+    "no-plusplus": "off",
+    "no-shadow": "off",
+    "react/jsx-key": ["error"],
+    "react/no-array-index-key": ["error"],
+    "no-underscore-dangle": "off",
+
+    // =============== Long rules ===============
+    "max-len": [
+      "error",
+      {
+        "code": 128,
+        "tabWidth": 2,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true,
+        "ignoreComments": false
+      }
+    ],
+
+    // =============== Type Script Related ===============
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+
+    // =============== Enabled Through Type Script Only ===============
+    "no-use-before-define": "off",
+
+    "indent": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "next.config.js",
+          "**/*.test.[jt]sx",
+          "**/*.test.[jt]s",
+          "setupTests.js",
+          "**/tests/**",
+          "**/mocks.tsx"
+        ]
+      }
+    ]
+  }
 }
