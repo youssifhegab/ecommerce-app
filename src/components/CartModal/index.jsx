@@ -5,7 +5,7 @@ import CommonModal from '../CommonModal';
 import { GlobalContext } from '@/context';
 import { deleteFromCart, getAllCartItems } from '@/services/cart';
 import { toast } from 'react-toastify';
-import ComponentLevelLoader from '../Loader/componentlevel';
+import ComponentLevelLoader from '../Loader';
 import { useRouter } from 'next/navigation';
 
 export default function CartModal() {

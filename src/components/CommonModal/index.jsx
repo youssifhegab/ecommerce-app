@@ -3,7 +3,15 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
-export default function CommonModal({ modalTitle, mainContent, showButtons, buttonComponent, show, setShow, showModalTitle }) {
+export default function CommonModal({
+  modalTitle,
+  mainContent,
+  showButtons,
+  buttonComponent,
+  show = false,
+  setShow,
+  showModalTitle,
+}) {
   return (
     <Transition.Root show={show} as={Fragment}>
       <Dialog as="div" className={'relative z-10'} onClose={setShow}>

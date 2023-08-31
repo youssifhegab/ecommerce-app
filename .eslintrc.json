@@ -41,36 +41,6 @@
         "ignoreRegExpLiterals": true,
         "ignoreComments": false
       }
-    ],
-
-    // =============== Type Script Related ===============
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
-      }
-    ],
-
-    // =============== Enabled Through Type Script Only ===============
-    "no-use-before-define": "off",
-
-    "indent": "off",
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": [
-          "next.config.js",
-          "**/*.test.[jt]sx",
-          "**/*.test.[jt]s",
-          "setupTests.js",
-          "**/tests/**",
-          "**/mocks.tsx"
-        ]
-      }
     ]
   }
 }
