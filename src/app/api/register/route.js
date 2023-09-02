@@ -2,7 +2,9 @@ import connectToDb from '@/database';
 import User from '@/models/user';
 import Joi from 'joi';
 import { NextResponse } from 'next/server';
-import hash from 'bcryptjs';
+import { hash } from 'bcryptjs';
+
+export const dynamic = 'force-dynamic';
 
 const schema = Joi.object({
   name: Joi.string().required(),
@@ -11,10 +13,8 @@ const schema = Joi.object({
   role: Joi.string().required(),
 });
 
-export const dynamic = 'force-dynamic';
-
 export async function POST(req) {
-  await connectToDb;
+  await connectToDb();
   const { name, email, password, role } = await req.json();
   // validate the schema
   const { error } = schema.validate({ name, email, password, role });
@@ -22,7 +22,7 @@ export async function POST(req) {
   if (error)
     return NextResponse.json({
       success: false,
-      message: error.details[0],
+      message: error.details[0].message,
     });
 
   try {
@@ -46,11 +46,11 @@ export async function POST(req) {
         message: 'Account created successfully',
       });
   } catch (e) {
-    console.log('error in new user registeration ', e);
+    console.log('error in new user registeration, please try again', e);
 
     return NextResponse.json({
       success: false,
-      message: 'something went wrong, please try again later',
+      message: `something went wrong, please try again later: ${e}`,
     });
   }
 }
