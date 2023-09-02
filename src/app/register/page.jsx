@@ -25,8 +25,6 @@ export default function Register() {
 
   const router = useRouter();
 
-  console.log(formData);
-
   function isFormValid() {
     return formData &&
       formData.name &&
