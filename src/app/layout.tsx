@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={inter.className}>
         <GlobalState>
           <Navbar />
-          <main className="flex min-h-screen flex-col mt-[80px]">{children}</main>
+          <main className="flex min-h-screen flex-col">{children}</main>
         </GlobalState>
       </body>
     </html>

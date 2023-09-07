@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import { GlobalContext } from '@/context';
 import NavItems from './NavItems';
 import CommonModal from '../CommonModal';
-import CartModal from '../CartModal';
+// import CartModal from '../CartModal';
 
 const Navbar = () => {
   const {
@@ -18,14 +18,12 @@ const Navbar = () => {
     setCurrentUpdatedProduct,
     setShowCartModal,
     showNavModal,
-    showCartModal,
+    // showCartModal,
     setShowNavModal,
   } = useContext(GlobalContext);
 
   const pathName = usePathname();
   const router = useRouter();
-
-  console.log(currentUpdatedProduct, 'navbar');
 
   useEffect(() => {
     if (pathName !== '/admin-view/add-product' && currentUpdatedProduct !== null) setCurrentUpdatedProduct(null);
@@ -42,7 +40,7 @@ const Navbar = () => {
   const isAdminView = pathName.includes('admin-view');
   return (
     <>
-      <nav className="bg-white fixed w-full z-20 top-0 left-0 border-b border-gray-200">
+      <nav className="bg-white sticky w-full z-20 top-0 left-0 border-b border-gray-200">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <div onClick={() => router.push('/')} className="flex items-center cursor-pointer">
             <span className="slef-center text-2xl font-semibold whitespace-nowrap">Ecommercery</span>
@@ -107,15 +105,15 @@ const Navbar = () => {
               <span className="sr-only">Open main menu</span>
               <svg
                 className="w-6 h-6"
-                aria-hidden="true"
+                ariaHidden="true"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 ></path>
               </svg>
             </button>
@@ -129,7 +127,7 @@ const Navbar = () => {
         show={showNavModal}
         setShow={setShowNavModal}
       />
-      {showCartModal && <CartModal />}
+      {/* {showCartModal && <CartModal />} */}
     </>
   );
 };

@@ -18,6 +18,7 @@ export async function POST(req) {
   const { email, password } = await req.json();
 
   const { error } = schema.validate({ email, password });
+  console.log({ error });
 
   if (error) {
     return NextResponse.json({
@@ -69,11 +70,11 @@ export async function POST(req) {
       finalData,
     });
   } catch (e) {
-    console.log('Error while logging In. Please try again');
+    console.log('Error while logging In. Please try again ');
 
     return NextResponse.json({
       success: false,
-      message: 'Something went wrong ! Please try again later',
+      message: `Something went wrong ! Please try again later: ${e}`,
     });
   }
 }
