@@ -136,7 +136,7 @@ export default function CartModal() {
           <div className="mt-6 flex justify-center text-center text-sm text-gray-600">
             <button type="button" className="font-medium text-grey">
               Continue Shopping
-              <span ariaHidden="true"> &rarr;</span>
+              <span> &rarr;</span>
             </button>
           </div>
         </Fragment>

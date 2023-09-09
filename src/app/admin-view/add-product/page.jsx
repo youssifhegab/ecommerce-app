@@ -1,9 +1,4 @@
 'use client';
-import { useContext, useEffect, useState } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
 
 import InputComponent from '@/components/FormElements/InputComponent';
 import SelectComponent from '@/components/FormElements/SelectComponent';
@@ -13,6 +8,11 @@ import Notification from '@/components/Notification';
 import { GlobalContext } from '@/context';
 import { addNewProduct, updateAProduct } from '@/services/product';
 import { AvailableSizes, adminAddProductformControls, firebaseConfig, firebaseStroageURL } from '@/utils';
+import { initializeApp } from 'firebase/app';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { useRouter } from 'next/navigation';
+import { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app, firebaseStroageURL);
@@ -74,7 +74,6 @@ export default function AdminAddNewProduct() {
 
   async function handleImage(event) {
     const extractImageUrl = await helperForUPloadingImageToFirebase(event.target.files[0]);
-    console.log({ file: event.target.files[0] });
 
     if (extractImageUrl !== '') {
       setFormData({
@@ -125,6 +124,8 @@ export default function AdminAddNewProduct() {
       setFormData(initialFormData);
     }
   }
+
+  console.log(formData);
 
   return (
     <div className="w-full mt-5 mr-0 mb-0 ml-0 relative">
