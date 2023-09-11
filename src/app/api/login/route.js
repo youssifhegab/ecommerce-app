@@ -51,7 +51,7 @@ export async function POST(req) {
         role: checkUser?.role,
       },
       'default_secret_key',
-      { expiresIn: '1d' },
+      { expiresIn: '1w' },
     );
 
     const finalData = {

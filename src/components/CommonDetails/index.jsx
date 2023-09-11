@@ -3,7 +3,7 @@
 import { GlobalContext } from '@/context';
 import { useContext } from 'react';
 import { toast } from 'react-toastify';
-import ComponentLevelLoader from '../Loader/componentlevel';
+import ComponentLevelLoader from '../Loader';
 import { addToCart } from '@/services/cart';
 import Notification from '../Notification';
 

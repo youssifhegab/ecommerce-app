@@ -1,4 +1,4 @@
-import connectToDB from '@/database';
+import connectToDb from '@/database';
 import AuthUser from '@/middleware/AuthUser';
 import Cart from '@/models/cart';
 import { NextResponse } from 'next/server';
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
   try {
-    await connectToDB();
+    await connectToDb();
 
     const isAuthUser = await AuthUser(req);
 
@@ -21,9 +21,10 @@ export async function GET(req) {
           message: 'Please login in!',
         });
       const extractAllCartItems = await Cart.find({ userID: id }).populate('productID');
+      const filteredCartItems = extractAllCartItems.filter(item => !!item.productID);
 
-      if (extractAllCartItems) {
-        return NextResponse.json({ success: true, data: extractAllCartItems });
+      if (filteredCartItems) {
+        return NextResponse.json({ success: true, data: filteredCartItems });
       } else {
         return NextResponse.json({
           success: false,

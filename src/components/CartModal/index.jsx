@@ -16,18 +16,19 @@ export default function CartModal() {
 
   async function extractAllCartItems() {
     const res = await getAllCartItems(user?._id);
+    console.log({ res });
 
-    if (res.success) {
+    if (res?.success) {
       const updatedData =
         res.data && res.data.length
-          ? res.data.map(item => ({
+          ? res.data?.map(item => ({
               ...item,
               productID: {
                 ...item.productID,
                 price:
-                  item.productID.onSale === 'yes'
-                    ? parseInt((item.productID.price - item.productID.price * (item.productID.priceDrop / 100)).toFixed(2))
-                    : item.productID.price,
+                  item.productID?.onSale === 'yes'
+                    ? parseInt((item.productID?.price - item.productID?.price * (item.productID?.priceDrop / 100)).toFixed(2))
+                    : item.productID?.price,
               },
             }))
           : [];
@@ -46,15 +47,16 @@ export default function CartModal() {
     setComponentLevelLoader({ loading: true, id: getCartItemID });
     const res = await deleteFromCart(getCartItemID);
 
-    if (res.success) {
+    if (res?.success) {
       setComponentLevelLoader({ loading: false, id: '' });
-      toast.success(res.message, {
+      toast.success(res?.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
+      localStorage.setItem('cartItems', JSON.stringify(res));
 
       extractAllCartItems();
     } else {
-      toast.error(res.message, {
+      toast.error(res?.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
       setComponentLevelLoader({ loading: false, id: getCartItemID });

@@ -1,4 +1,4 @@
-import connectToDB from '@/database';
+import connectToDb from '@/database';
 import AuthUser from '@/middleware/AuthUser';
 import Product from '@/models/product';
 import Joi from 'joi';
@@ -20,7 +20,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req) {
   try {
-    await connectToDB();
+    await connectToDb();
 
     const isAuthUser = await AuthUser(req);
 

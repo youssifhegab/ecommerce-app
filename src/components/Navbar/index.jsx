@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import { GlobalContext } from '@/context';
 import NavItems from './NavItems';
 import CommonModal from '../CommonModal';
-// import CartModal from '../CartModal';
+import CartModal from '../CartModal';
 
 const Navbar = () => {
   const {
@@ -18,7 +18,7 @@ const Navbar = () => {
     setCurrentUpdatedProduct,
     setShowCartModal,
     showNavModal,
-    // showCartModal,
+    showCartModal,
     setShowNavModal,
   } = useContext(GlobalContext);
 
@@ -121,7 +121,7 @@ const Navbar = () => {
         show={showNavModal}
         setShow={setShowNavModal}
       />
-      {/* {showCartModal && <CartModal />} */}
+      {showCartModal && <CartModal />}
     </>
   );
 };
