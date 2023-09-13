@@ -8,7 +8,8 @@ export async function GET() {
   try {
     await connectToDb();
 
-    const extractAllproducts = await Product.find({});
+    const extractAllproducts = await Product.find();
+    console.log({ extractAllproducts });
 
     if (extractAllproducts) {
       return NextResponse.json({
