@@ -1,7 +1,7 @@
 'use client';
 
 import CommonCart from '@/components/CommonCart';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { deleteFromCart, getAllCartItems } from '@/services/cart';
 import { useContext, useEffect } from 'react';
 import { PulseLoader } from 'react-spinners';
@@ -33,8 +33,6 @@ export default function Cart() {
       setPageLevelLoader(false);
       localStorage.setItem('cartItems', JSON.stringify(updatedData));
     }
-
-    console.log(res);
   }
 
   useEffect(() => {

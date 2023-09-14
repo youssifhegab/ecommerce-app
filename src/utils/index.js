@@ -38,6 +38,25 @@ export const adminNavOptions = [
     path: '/admin-view/add-product',
   },
 ];
+export const accountOptions = isAdminView => [
+  {
+    id: 'settings',
+    label: 'settings',
+    path: '/account',
+  },
+  {
+    id: 'adminView',
+    label: 'admin view',
+    path: '/admin-view',
+    disable: isAdminView,
+  },
+  {
+    id: 'clientView',
+    label: 'client view',
+    path: '/',
+    disable: !isAdminView,
+  },
+];
 
 export const registrationFormControls = [
   {

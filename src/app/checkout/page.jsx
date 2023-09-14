@@ -1,7 +1,7 @@
 'use client';
 
 import Notification from '@/components/Notification';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { fetchAllAddresses } from '@/services/address';
 import { createNewOrder } from '@/services/order';
 import { callStripeSession } from '@/services/stripe';
@@ -132,8 +132,6 @@ export default function Checkout() {
     console.log(error);
   }
 
-  console.log(checkoutFormData);
-
   useEffect(() => {
     if (orderSuccess) {
       setTimeout(() => {
@@ -148,7 +146,7 @@ export default function Checkout() {
       <section className="h-screen bg-gray-200">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mt-8 max-w-screen-xl px-4 sm:px-6 lg:px-8 ">
-            <div className="bg-white shadow">
+            <div className="bg-background shadow">
               <div className="px-4 py-6 sm:px-8 sm:py-10 flex flex-col gap-5">
                 <h1 className="font-bold text-lg">
                   Your payment is successfull and you will be redirected to orders page in 2 seconds !
@@ -174,10 +172,10 @@ export default function Checkout() {
       <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
         <div className="px-4 pt-8">
           <p className="font-medium text-xl">Cart Summary</p>
-          <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-5">
+          <div className="mt-8 space-y-3 rounded-lg border bg-background px-2 py-4 sm:px-5">
             {cartItems && cartItems.length ? (
               cartItems.map(item => (
-                <div className="flex flex-col rounded-lg bg-white sm:flex-row" key={item._id}>
+                <div className="flex flex-col rounded-lg bg-background sm:flex-row" key={item._id}>
                   <img
                     src={item && item.productID && item.productID.imageUrl}
                     alt="Cart Item"

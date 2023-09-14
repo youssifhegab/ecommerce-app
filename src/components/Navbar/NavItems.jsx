@@ -1,35 +1,29 @@
 'use client';
-import { adminNavOptions, navOptions } from '@/utils';
+import * as Menubar from '@radix-ui/react-menubar';
 
-function NavItems({ isModalView = false, isAdminView, router }) {
+function NavItems({ router, options, button }) {
   return (
-    <div className={`w-full items-center justify-between md:flex md:w-auto ${isModalView ? '' : 'hidden'}`} id="nav-items">
-      <ul
-        className={`mt-4 flex flex-col rounded-lg bg-white p-4  font-medium md:mt-0 md:flex-row md:space-x-8 md:border-0 md:p-0 ${
-          isModalView ? 'border-none' : 'border border-gray-100'
-        }`}
-      >
-        {isAdminView
-          ? adminNavOptions.map(item => (
-              <li
-                className="block cursor-pointer rounded py-2 pl-3 pr-4 text-gray-900 md:p-0"
-                key={item.id}
-                onClick={() => router.push(item.path)}
-              >
-                {item.label}
-              </li>
-            ))
-          : navOptions.map(item => (
-              <li
-                className="block cursor-pointer rounded py-2 pl-3 pr-4 text-gray-900 md:p-0"
-                key={item.id}
-                onClick={() => router.push(item.path)}
-              >
-                {item.label}
-              </li>
-            ))}
-      </ul>
-    </div>
+    <Menubar.Root>
+      <Menubar.Menu>
+        <Menubar.Trigger>{button}</Menubar.Trigger>
+        <Menubar.Portal className={`w-full items-center justify-between`} id="nav-items">
+          <Menubar.Content className={`mt-4 flex flex-col rounded-lg bg-background p-4 shadow-lg font-medium`}>
+            {options.map(
+              item =>
+                !item.disable && (
+                  <Menubar.Item
+                    className="block cursor-pointer rounded py-2 pl-3 pr-4 font-bold"
+                    key={item.id}
+                    onClick={() => router.push(item.path)}
+                  >
+                    {item.label}
+                  </Menubar.Item>
+                ),
+            )}
+          </Menubar.Content>
+        </Menubar.Portal>
+      </Menubar.Menu>
+    </Menubar.Root>
   );
 }
 

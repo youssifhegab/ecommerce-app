@@ -2,7 +2,7 @@
 
 import { Fragment, useContext, useEffect } from 'react';
 import CommonModal from '../CommonModal';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { deleteFromCart, getAllCartItems } from '@/services/cart';
 import { toast } from 'react-toastify';
 import ComponentLevelLoader from '../Loader';
@@ -16,7 +16,6 @@ export default function CartModal() {
 
   async function extractAllCartItems() {
     const res = await getAllCartItems(user?._id);
-    console.log({ res });
 
     if (res?.success) {
       const updatedData =
@@ -35,8 +34,6 @@ export default function CartModal() {
       setCartItems(updatedData);
       localStorage.setItem('cartItems', JSON.stringify(updatedData));
     }
-
-    console.log(res);
   }
 
   useEffect(() => {

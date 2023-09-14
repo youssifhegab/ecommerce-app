@@ -1,6 +1,6 @@
 'use client';
 
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { useContext } from 'react';
 import { toast } from 'react-toastify';
 import ComponentLevelLoader from '../Loader';

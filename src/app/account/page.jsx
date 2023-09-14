@@ -3,7 +3,7 @@
 import InputComponent from '@/components/FormElements/InputComponent';
 import ComponentLevelLoader from '@/components/Loader';
 import Notification from '@/components/Notification';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { addNewAddress, deleteAddress, fetchAllAddresses, updateAddress } from '@/services/address';
 import { addNewAddressFormControls } from '@/utils';
 import { useRouter } from 'next/navigation';
@@ -48,8 +48,6 @@ export default function Account() {
             _id: currentEditedAddressId,
           })
         : await addNewAddress({ ...addressFormData, userID: user?._id });
-
-    console.log(res);
 
     if (res.success) {
       setComponentLevelLoader({ loading: false, id: '' });
@@ -120,7 +118,7 @@ export default function Account() {
   return (
     <section>
       <div className="mx-auto bg-gray-100 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow">
+        <div className="bg-background shadow">
           <div className="p-6 sm:p-12">
             <div className="flex flex-col space-y-4 md:space-y-0 md:space-x-6 md:flex-row">
               {/* we have render random user image here */}

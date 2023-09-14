@@ -5,7 +5,7 @@ import SelectComponent from '@/components/FormElements/SelectComponent';
 import TileComponent from '@/components/FormElements/TileComponent';
 import ComponentLevelLoader from '@/components/Loader';
 import Notification from '@/components/Notification';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { addNewProduct, updateAProduct } from '@/services/product';
 import { AvailableSizes, adminAddProductformControls, firebaseConfig, firebaseStroageURL } from '@/utils';
 import { initializeApp } from 'firebase/app';
@@ -64,8 +64,6 @@ export default function AdminAddNewProduct() {
   const { componentLevelLoader, setComponentLevelLoader, currentUpdatedProduct, setCurrentUpdatedProduct } =
     useContext(GlobalContext);
 
-  console.log(currentUpdatedProduct);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -103,8 +101,6 @@ export default function AdminAddNewProduct() {
     setComponentLevelLoader({ loading: true, id: '' });
     const res = currentUpdatedProduct !== null ? await updateAProduct(formData) : await addNewProduct(formData);
 
-    console.log(res);
-
     if (res.success) {
       setComponentLevelLoader({ loading: false, id: '' });
       toast.success(res.message, {
@@ -125,11 +121,9 @@ export default function AdminAddNewProduct() {
     }
   }
 
-  console.log(formData);
-
   return (
     <div className="w-full mt-5 mr-0 mb-0 ml-0 relative">
-      <div className="flex flex-col items-start justify-start p-10 bg-white shadow-2xl rounded-xl relative">
+      <div className="flex flex-col items-start justify-start p-10 bg-background shadow-2xl rounded-xl relative">
         <div className="w-full mt-6 mr-0 mb-0 ml-0 space-y-8">
           <input accept="image/*" max="1000000" type="file" onChange={handleImage} />
 

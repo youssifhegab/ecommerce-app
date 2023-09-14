@@ -7,7 +7,7 @@ import InputComponent from '@/components/FormElements/InputComponent';
 import SelectComponent from '@/components/FormElements/SelectComponent';
 import ComponentLevelLoader from '@/components/Loader';
 import Notification from '@/components/Notification';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { registerNewUser } from '@/services/register';
 import { registrationFormControls } from '@/utils';
 
@@ -37,8 +37,6 @@ export default function Register() {
       : false;
   }
 
-  console.log(isFormValid());
-
   async function handleRegisterOnSubmit() {
     setPageLevelLoader(true);
     const data = await registerNewUser(formData);
@@ -57,8 +55,6 @@ export default function Register() {
       setPageLevelLoader(false);
       setFormData(initialFormData);
     }
-
-    console.log(data);
   }
 
   useEffect(() => {
@@ -66,11 +62,11 @@ export default function Register() {
   }, [isAuthUser]);
 
   return (
-    <div className="bg-white relative">
+    <div className="bg-background relative">
       <div className="flex flex-col items-center justify-between pt-0 pr-10 pb-0 pl-10 mt-8 mr-auto xl:px-5 lg:flex-row">
         <div className="flex flex-col justify-center items-center w-full pr-10 pl-10 lg:flex-row">
           <div className="w-full mt-10 mr-0 mb-0 ml-0 relative max-w-2xl lg:mt-0 lg:w-5/12">
-            <div className="flex flex-col items-center justify-start pt-10 pr-10 pb-10 pl-10 bg-white shadow-2xl rounded-xl relative z-10">
+            <div className="flex flex-col items-center justify-start pt-10 pr-10 pb-10 pl-10 bg-background shadow-2xl rounded-xl relative z-10">
               <p className="w-full text-4xl font-medium text-center font-serif">
                 {isRegistered ? 'Registration Successfull !' : 'Sign up for an account'}
               </p>

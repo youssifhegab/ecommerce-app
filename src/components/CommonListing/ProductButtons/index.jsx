@@ -1,7 +1,7 @@
 'use client';
 
 import ComponentLevelLoader from '@/components/Loader';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { addToCart } from '@/services/cart';
 import { deleteAProduct } from '@/services/product';
 import { usePathname, useRouter } from 'next/navigation';
@@ -53,8 +53,6 @@ export default function ProductButton({ item }) {
       setComponentLevelLoader({ loading: false, id: '' });
       setShowCartModal(true);
     }
-
-    console.log(res);
   }
 
   return isAdminView ? (

@@ -1,7 +1,7 @@
 'use client';
 
 import Notification from '@/components/Notification';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { getAllOrdersForUser } from '@/services/order';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
@@ -35,8 +35,6 @@ export default function Orders() {
   useEffect(() => {
     if (user !== null) extractAllOrders();
   }, [user]);
-
-  console.log(allOrdersForUser);
 
   if (pageLevelLoader) {
     return (

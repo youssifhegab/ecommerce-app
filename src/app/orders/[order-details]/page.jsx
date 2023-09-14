@@ -1,6 +1,6 @@
 'use client';
 
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { getOrderDetails } from '@/services/order';
 import { useParams, useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
@@ -23,8 +23,6 @@ export default function OrderDetails() {
     } else {
       setPageLevelLoader(false);
     }
-
-    console.log(res);
   }
 
   useEffect(() => {

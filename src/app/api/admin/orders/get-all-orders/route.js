@@ -12,7 +12,6 @@ export async function GET(req) {
 
     if (isAuthUser?.role === 'admin') {
       const getAllOrders = await Order.find({}).populate('orderItems.product').populate('user');
-      console.log({ getAllOrders });
 
       if (getAllOrders) {
         return NextResponse.json({
