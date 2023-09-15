@@ -12,17 +12,16 @@ import { PulseLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 
 export default function Account() {
-  const {
-    user,
-    addresses,
-    setAddresses,
-    addressFormData,
-    setAddressFormData,
-    componentLevelLoader,
-    setComponentLevelLoader,
-    pageLevelLoader,
-    setPageLevelLoader,
-  } = useContext(GlobalContext);
+  const { user, addresses, setAddresses, componentLevelLoader, setComponentLevelLoader, pageLevelLoader, setPageLevelLoader } =
+    useContext(GlobalContext);
+
+  const [addressFormData, setAddressFormData] = useState({
+    fullName: '',
+    city: '',
+    country: '',
+    postalCode: '',
+    address: '',
+  });
 
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [currentEditedAddressId, setCurrentEditedAddressId] = useState(null);

@@ -1,57 +1,30 @@
 'use client';
 
-import { Fragment, useContext, useEffect } from 'react';
-import CommonModal from '../CommonModal';
+import { useContext } from 'react';
+import SlideOver from '../CommonModal';
 import { GlobalContext } from '@/context/GlobalState';
-import { deleteFromCart, getAllCartItems } from '@/services/cart';
+import { deleteFromCart } from '@/services/cart';
 import { toast } from 'react-toastify';
 import ComponentLevelLoader from '../Loader';
 import { useRouter } from 'next/navigation';
+import { Button } from '../UIComponents/Button';
 
 export default function CartModal() {
-  const { showCartModal, setShowCartModal, cartItems, setCartItems, user, setComponentLevelLoader, componentLevelLoader } =
-    useContext(GlobalContext);
+  const { showCartModal, setShowCartModal, setComponentLevelLoader, componentLevelLoader, user } = useContext(GlobalContext);
+  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
   const router = useRouter();
 
-  async function extractAllCartItems() {
-    const res = await getAllCartItems(user?._id);
-
-    if (res?.success) {
-      const updatedData =
-        res.data && res.data.length
-          ? res.data?.map(item => ({
-              ...item,
-              productID: {
-                ...item.productID,
-                price:
-                  item.productID?.onSale === 'yes'
-                    ? parseInt((item.productID?.price - item.productID?.price * (item.productID?.priceDrop / 100)).toFixed(2))
-                    : item.productID?.price,
-              },
-            }))
-          : [];
-      setCartItems(updatedData);
-      localStorage.setItem('cartItems', JSON.stringify(updatedData));
-    }
-  }
-
-  useEffect(() => {
-    if (user !== null) extractAllCartItems();
-  }, [user]);
-
   async function handleDeleteCartItem(getCartItemID) {
     setComponentLevelLoader({ loading: true, id: getCartItemID });
-    const res = await deleteFromCart(getCartItemID);
+    const res = await deleteFromCart(getCartItemID, user._id);
 
     if (res?.success) {
       setComponentLevelLoader({ loading: false, id: '' });
       toast.success(res?.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
-      localStorage.setItem('cartItems', JSON.stringify(res));
-
-      extractAllCartItems();
+      localStorage.setItem('cartItems', JSON.stringify(res.cartProducts));
     } else {
       toast.error(res?.message, {
         position: toast.POSITION.TOP_RIGHT,
@@ -61,85 +34,68 @@ export default function CartModal() {
   }
 
   return (
-    <CommonModal
-      showButtons={true}
-      show={showCartModal}
-      setShow={setShowCartModal}
-      mainContent={
-        cartItems && cartItems.length ? (
-          <ul role="list" className="-my-6 divide-y divide-gray-300">
-            {cartItems.map(cartItem => (
-              <li key={cartItem.id} className="flex py-6">
-                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                  <img
-                    src={cartItem && cartItem.productID && cartItem.productID.imageUrl}
-                    alt="Cart Item"
-                    className="h-full w-full object-cover object-center"
-                  />
-                </div>
-                <div className="ml-4 flex flex-1 flex-col">
-                  <div>
-                    <div className="flex justify-between text-base font-medium text-gray-900">
-                      <h3>
-                        <a>{cartItem && cartItem.productID && cartItem.productID.name}</a>
-                      </h3>
-                    </div>
-                    <p className="mt-1 text-sm text-gray-600">${cartItem && cartItem.productID && cartItem.productID.price}</p>
-                  </div>
-                  <div className="flex flex-1 items-end justify-between text-sm">
-                    <button
-                      type="button"
-                      className="font-medium text-yellow-600 sm:order-2"
-                      onClick={() => handleDeleteCartItem(cartItem._id)}
-                    >
-                      {componentLevelLoader && componentLevelLoader.loading && componentLevelLoader.id === cartItem._id ? (
-                        <ComponentLevelLoader
-                          text={'Removing'}
-                          color={'#000000'}
-                          loading={componentLevelLoader && componentLevelLoader.loading}
-                        />
-                      ) : (
-                        'Remove'
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : null
-      }
-      buttonComponent={
-        <Fragment>
-          <button
-            type="button"
+    <SlideOver open={showCartModal} setOpen={setShowCartModal}>
+      <div className="bg-background flex flex-col-reverse justify-between h-full p-4">
+        <div className="flex flex-col gap-3">
+          <Button
             onClick={() => {
               router.push('/cart');
               setShowCartModal(false);
             }}
-            className="mt-1.5 w-full inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
           >
             Go To Cart
-          </button>
-          <button
+          </Button>
+          <Button
             disabled={cartItems && cartItems.length === 0}
-            type="button"
             onClick={() => {
               router.push('/checkout');
               setShowCartModal(false);
             }}
-            className="mt-1.5 w-full inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide disabled:opacity-50"
           >
             Checkout
-          </button>
-          <div className="mt-6 flex justify-center text-center text-sm text-gray-600">
-            <button type="button" className="font-medium text-grey">
-              Continue Shopping
-              <span> &rarr;</span>
-            </button>
-          </div>
-        </Fragment>
-      }
-    />
+          </Button>
+          <Button type="button" variant="ghost" onClick={() => setShowCartModal(false)}>
+            Continue Shopping
+            <span> &rarr;</span>
+          </Button>
+        </div>
+        {!!cartItems && !!cartItems.length && (
+          <ul role="list" className="-my-6 divide-y divide-gray-300">
+            {cartItems.map(cartItem => (
+              <li key={cartItem.id} className="flex py-6 justify-between items-center">
+                <div className="flex gap-2 items-center">
+                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md shadow-sm">
+                    <img
+                      src={cartItem && cartItem.productID && cartItem.productID.imageUrl}
+                      alt="Cart Item"
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </div>
+                  <div className="ml-4 flex flex-1 flex-col">
+                    <div className="flex justify-between text-base font-bold">
+                      <h3>
+                        <a>{cartItem && cartItem.productID && cartItem.productID.name}</a>
+                      </h3>
+                    </div>
+                    <p className="mt-1 text-sm">${cartItem && cartItem.productID && cartItem.productID.price}</p>
+                  </div>
+                </div>
+                <Button type="button" variant="destructive" onClick={() => handleDeleteCartItem(cartItem._id)}>
+                  {componentLevelLoader && componentLevelLoader.loading && componentLevelLoader.id === cartItem._id ? (
+                    <ComponentLevelLoader
+                      text={'Removing'}
+                      color={'#000000'}
+                      loading={componentLevelLoader && componentLevelLoader.loading}
+                    />
+                  ) : (
+                    'Remove'
+                  )}
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </SlideOver>
   );
 }

@@ -4,12 +4,13 @@ import Notification from '@/components/Notification';
 import { GlobalContext } from '@/context/GlobalState';
 import { getAllOrdersForUser } from '@/services/order';
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PulseLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 
 export default function Orders() {
-  const { user, pageLevelLoader, setPageLevelLoader, allOrdersForUser, setAllOrdersForUser } = useContext(GlobalContext);
+  const { user, pageLevelLoader, setPageLevelLoader } = useContext(GlobalContext);
+  const [allOrdersForUser, setAllOrdersForUser] = useState([]);
 
   const router = useRouter();
 

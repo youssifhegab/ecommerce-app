@@ -1,6 +1,7 @@
 'use client';
 
 import Notification from '@/components/Notification';
+import { Button } from '@/components/UIComponents/Button';
 import { GlobalContext } from '@/context/GlobalState';
 import { fetchAllAddresses } from '@/services/address';
 import { createNewOrder } from '@/services/order';
@@ -12,7 +13,17 @@ import { PulseLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 
 export default function Checkout() {
-  const { cartItems, user, addresses, setAddresses, checkoutFormData, setCheckoutFormData } = useContext(GlobalContext);
+  const { user, addresses, setAddresses } = useContext(GlobalContext);
+  const [checkoutFormData, setCheckoutFormData] = useState({
+    shippingAddress: {},
+    paymentMethod: '',
+    totalPrice: 0,
+    isPaid: false,
+    paidAt: new Date(),
+    isProcessing: true,
+  });
+
+  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isOrderProcessing, setIsOrderProcessing] = useState(false);
@@ -143,13 +154,13 @@ export default function Checkout() {
 
   if (orderSuccess) {
     return (
-      <section className="h-screen bg-gray-200">
+      <section className="h-screen">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mt-8 max-w-screen-xl px-4 sm:px-6 lg:px-8 ">
             <div className="bg-background shadow">
               <div className="px-4 py-6 sm:px-8 sm:py-10 flex flex-col gap-5">
                 <h1 className="font-bold text-lg">
-                  Your payment is successfull and you will be redirected to orders page in 2 seconds !
+                  Your payment is successful and you will be redirected to orders page in 2 seconds!
                 </h1>
               </div>
             </div>
@@ -192,62 +203,58 @@ export default function Checkout() {
             )}
           </div>
         </div>
-        <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
+        <div className="mt-10 px-4 pt-8 lg:mt-0 gap-2 flex flex-col">
           <p className="text-xl font-medium">Shipping address details</p>
-          <p className="text-gray-400 font-bold">Complete your order by selecting address below</p>
+          <p className="font-bold">Complete your order by selecting address below</p>
           <div className="w-full mt-6 mr-0 mb-0 ml-0 space-y-6">
             {addresses && addresses.length ? (
               addresses.map(item => (
                 <div
                   onClick={() => handleSelectedAddress(item)}
                   key={item._id}
-                  className={`border p-6 ${item._id === selectedAddress ? 'border-red-900' : ''}`}
+                  className={`border p-6 gap-2 flex flex-col ${item._id === selectedAddress ? 'border-red-900' : ''}`}
                 >
                   <p>Name : {item.fullName}</p>
                   <p>Address : {item.address}</p>
                   <p>City : {item.city}</p>
                   <p>Country : {item.country}</p>
                   <p>PostalCode : {item.postalCode}</p>
-                  <button className="mt-5 mr-5 inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide">
-                    {item._id === selectedAddress ? 'Selected Address' : 'Select Address'}
-                  </button>
+                  <Button>{item._id === selectedAddress ? 'Selected Address' : 'Select Address'}</Button>
                 </div>
               ))
             ) : (
               <p>No addresses added</p>
             )}
           </div>
-          <button
-            onClick={() => router.push('/account')}
-            className="mt-5 mr-5 inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
-          >
-            Add new address
-          </button>
+          <div>
+            <Button onClick={() => router.push('/account')}>Add new address</Button>
+          </div>
           <div className="mt-6 border-t border-b py-2">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-900">Subtotal</p>
-              <p className="text-lg font-bold text-gray-900">
+              <p className="text-sm font-medium">Subtotal</p>
+              <p className="text-lg font-bold">
                 ${cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'}
               </p>
             </div>
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-900">Shipping</p>
-              <p className="text-lg font-bold text-gray-900">Free</p>
+              <p className="text-sm font-medium">Shipping</p>
+              <p className="text-lg font-bold">Free</p>
             </div>
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-900">Total</p>
-              <p className="text-lg font-bold text-gray-900">
+              <p className="text-sm font-medium">Total</p>
+              <p className="text-lg font-bold">
                 ${cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'}
               </p>
             </div>
             <div className="pb-10">
-              <button
+              <Button
                 disabled={(cartItems && cartItems.length === 0) || Object.keys(checkoutFormData.shippingAddress).length === 0}
                 onClick={handleCheckout}
-                className="disabled:opacity-50 mt-5 mr-5 w-full  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
+                size="lg"
+                className="bg-violet-600 text-white"
               >
                 Checkout
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -17,7 +17,7 @@ const SelectTrigger = React.forwardRef(({ className, children, hideChevron = fal
     ref={ref}
     className={cn(
       !hideChevron &&
-        'flex h-10 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-14 w-full items-center justify-between rounded-md border focus:border-secondary-foreground bg-transparent border-secondary-foreground px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
       className,
     )}
     {...props}
@@ -25,7 +25,7 @@ const SelectTrigger = React.forwardRef(({ className, children, hideChevron = fal
     {children}
     {!hideChevron && (
       <SelectPrimitive.Icon asChild>
-        <ChevronDown className="h-4 w-4 opacity-50" />
+        <ChevronDown className="h-4 w-4" />
       </SelectPrimitive.Icon>
     )}
   </SelectPrimitive.Trigger>

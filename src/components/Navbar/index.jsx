@@ -2,7 +2,6 @@
 import React, { useContext, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import { useMediaQuery } from 'react-responsive';
 import { ShoppingBag, User, Menu } from 'lucide-react';
 
 import { GlobalContext } from '@/context/GlobalState';
@@ -11,26 +10,16 @@ import CartModal from '../CartModal';
 import { ThemeToggle } from '../ThemeToggle';
 import { MainNav } from '../MainNav';
 import { Button } from '../UIComponents/Button';
-import { accountOptions, adminNavOptions, navOptions } from '@/utils';
+import { adminNavOptions, navOptions } from '@/utils';
 
 const Navbar = () => {
-  const {
-    user,
-    isAuthUser,
-    setIsAuthUser,
-    setUser,
-    currentUpdatedProduct,
-    setCurrentUpdatedProduct,
-    setShowCartModal,
-    showCartModal,
-  } = useContext(GlobalContext);
+  const { isAuthUser, setIsAuthUser, setUser, currentUpdatedProduct, setCurrentUpdatedProduct, setShowCartModal } =
+    useContext(GlobalContext);
+
+  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
   const pathName = usePathname();
   const router = useRouter();
-
-  const isMobile = useMediaQuery({
-    query: `(max-width: 992px)`,
-  });
 
   useEffect(() => {
     if (pathName !== '/admin-view/add-product' && currentUpdatedProduct !== null) setCurrentUpdatedProduct(null);
@@ -45,6 +34,39 @@ const Navbar = () => {
   }
 
   const isAdminView = pathName.includes('admin-view');
+
+  const accountOptions = () => [
+    {
+      id: 'settings',
+      label: 'settings',
+      path: '/account',
+    },
+    {
+      id: 'adminView',
+      label: 'admin view',
+      path: '/admin-view',
+      disable: isAdminView,
+    },
+    {
+      id: 'clientView',
+      label: 'client view',
+      path: '/',
+      disable: !isAdminView,
+    },
+    {
+      id: 'login',
+      label: 'Login',
+      path: '/login',
+      disable: isAuthUser,
+    },
+    {
+      id: 'logout',
+      label: 'Logout',
+      disable: !isAuthUser,
+      onClick: handleLogout,
+    },
+  ];
+
   return (
     <>
       <nav className="sticky top-0 z-40 w-full shadow-md bg-background">
@@ -66,35 +88,16 @@ const Navbar = () => {
           </div>
           <div className="flex md:order-2 gap-2 items-center">
             <ThemeToggle />
-            {!isMobile && (
-              <>
-                {user?.role === 'admin' ? (
-                  isAdminView ? (
-                    <Button onClick={() => router.push('/')}>
-                      <span className="font-bold">Client View</span>
-                    </Button>
-                  ) : (
-                    <Button onClick={() => router.push('/admin-view')}>
-                      <span className="font-bold">Admin View</span>
-                    </Button>
-                  )
-                ) : null}
-                {isAuthUser ? (
-                  <Button onClick={handleLogout}>
-                    <span className="font-bold">Logout</span>
-                  </Button>
-                ) : (
-                  <Button onClick={() => router.push('/login')}>
-                    <span className="font-bold">Login</span>
-                  </Button>
-                )}
-              </>
+            {!isAuthUser && (
+              <Button onClick={() => router.push('/login')}>
+                <span className="font-bold">Login</span>
+              </Button>
             )}
             {!isAdminView && isAuthUser ? (
               <>
                 <Button onClick={() => setShowCartModal(true)} size="sm" variant="ghost">
                   <ShoppingBag className="h-5 w-5" />
-                  <span className="ml-2 text-sm font-bold">0</span>
+                  <span className="ml-2 text-sm font-bold">{cartItems?.length}</span>
                   <span className="sr-only">Cart</span>
                 </Button>
               </>
@@ -102,7 +105,7 @@ const Navbar = () => {
             {isAuthUser && (
               <NavItems
                 router={router}
-                options={accountOptions(isAdminView)}
+                options={accountOptions(isAdminView, isAuthUser)}
                 button={
                   <Button size="sm" variant="ghost">
                     <User className="h-5 w-5" />
@@ -114,7 +117,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      {showCartModal && <CartModal />}
+      <CartModal />
     </>
   );
 };

@@ -8,7 +8,7 @@ import { PulseLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 
 export default function Cart() {
-  const { user, setCartItems, cartItems, pageLevelLoader, setPageLevelLoader, setComponentLevelLoader, componentLevelLoader } =
+  const { user, pageLevelLoader, setPageLevelLoader, setComponentLevelLoader, componentLevelLoader } =
     useContext(GlobalContext);
 
   async function extractAllCartItems() {
@@ -29,7 +29,6 @@ export default function Cart() {
               },
             }))
           : [];
-      setCartItems(updatedData);
       setPageLevelLoader(false);
       localStorage.setItem('cartItems', JSON.stringify(updatedData));
     }
@@ -62,12 +61,10 @@ export default function Cart() {
   if (pageLevelLoader) {
     return (
       <div className="w-full min-h-screen flex justify-center items-center">
-        <PulseLoader color={'#000000'} loading={pageLevelLoader} size={30} data-testid="loader" />
+        <PulseLoader loading={pageLevelLoader} size={30} data-testid="loader" />
       </div>
     );
   }
 
-  return (
-    <CommonCart componentLevelLoader={componentLevelLoader} handleDeleteCartItem={handleDeleteCartItem} cartItems={cartItems} />
-  );
+  return <CommonCart componentLevelLoader={componentLevelLoader} handleDeleteCartItem={handleDeleteCartItem} />;
 }

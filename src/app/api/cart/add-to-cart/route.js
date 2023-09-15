@@ -42,11 +42,14 @@ export async function POST(req) {
       }
 
       const saveProductToCart = await Cart.create(data);
+      const extractAllCartItems = await Cart.find({ userID }).populate('productID');
+      const cartProducts = extractAllCartItems.filter(item => !!item.productID);
 
       if (saveProductToCart) {
         return NextResponse.json({
           success: true,
           message: 'Product is added to cart !',
+          cartProducts,
         });
       } else {
         return NextResponse.json({

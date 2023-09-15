@@ -3,11 +3,12 @@
 import { GlobalContext } from '@/context/GlobalState';
 import { getOrderDetails } from '@/services/order';
 import { useParams, useRouter } from 'next/navigation';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PulseLoader } from 'react-spinners';
 
 export default function OrderDetails() {
-  const { pageLevelLoader, setPageLevelLoader, orderDetails, setOrderDetails, user } = useContext(GlobalContext);
+  const { pageLevelLoader, setPageLevelLoader, user } = useContext(GlobalContext);
+  const [orderDetails, setOrderDetails] = useState(null);
 
   const params = useParams();
   const router = useRouter();
