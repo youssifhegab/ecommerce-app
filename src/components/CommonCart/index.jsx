@@ -1,6 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { X } from 'lucide-react';
+
 import ComponentLevelLoader from '../Loader';
 import { Button } from '../UIComponents/Button';
 
@@ -18,35 +20,31 @@ export default function CommonCart({ handleDeleteCartItem, componentLevelLoader 
                 {cartItems && cartItems.length ? (
                   <ul className="-my-8">
                     {cartItems.map(cartItem => (
-                      <li
-                        className="flex-col flex space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0"
-                        key={cartItem.id}
-                      >
-                        <div className="shrink-0">
+                      <li className="flex py-6 text-left gap-2 flex-row" key={cartItem.id}>
+                        <div className="h-24 w-24 flex flex-shrink-0">
                           <img
                             src={cartItem && cartItem.productID && cartItem.productID.imageUrl}
                             alt="Product image"
-                            className="h-24 w-25 max-w-full rounded-lg object-cover"
+                            className="h-full w-full rounded-lg object-cover"
                           />
                         </div>
-                        <div className="flex flex-1 justify-between items-center">
+                        <div className="flex flex-1 justify-between">
                           <div className="pr-8 sm:pr-4 flex flex-col gap-1">
                             <p className="text-base font-bold">{cartItem && cartItem.productID && cartItem.productID.name}</p>
                             <p className="shrink-0 w-20 text-base font-semibold">
-                              ${cartItem && cartItem.productID && cartItem.productID.price}
+                              {cartItem && cartItem.productID && cartItem.productID.price} EGP
                             </p>
                           </div>
-                          <Button type="button" variant="destructive" onClick={() => handleDeleteCartItem(cartItem._id)}>
+                          <Button type="button" variant="ghost" size="sm" onClick={() => handleDeleteCartItem(cartItem._id)}>
                             {componentLevelLoader &&
                             componentLevelLoader.loading &&
                             componentLevelLoader.id === cartItem._id ? (
                               <ComponentLevelLoader
                                 text={'Removing'}
-                                color={'#0000000'}
                                 loading={componentLevelLoader && componentLevelLoader.loading}
                               />
                             ) : (
-                              'Remove'
+                              <X />
                             )}
                           </Button>
                         </div>
@@ -61,17 +59,19 @@ export default function CommonCart({ handleDeleteCartItem, componentLevelLoader 
                 <div className="flex items-center justify-between">
                   <p className="text-sm">Subtotal</p>
                   <p className="text-lg font-semibold">
-                    ${cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'}
+                    {cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'}
+                    EGP
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm">Shipping</p>
-                  <p className="text-lg font-semibold">$0</p>
+                  <p className="text-lg font-semibold">0 EGP</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm">Total</p>
                   <p className="text-lg font-semibold">
-                    ${cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'}
+                    {cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'}
+                    EGP
                   </p>
                 </div>
                 <div className="mt-5 text-center w-full flex">

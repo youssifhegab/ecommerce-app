@@ -62,7 +62,7 @@ export default function Home() {
                           className="cursor-pointer"
                           key={productItem._id}
                         >
-                          <div className="w-full h-80 overflow-hidden rounded-lg group-hover:opacity-75 dark:border-gray-800">
+                          <div className="w-full sm:h-80 h-60 overflow-hidden rounded-lg group-hover:opacity-75 dark:border-gray-800">
                             <img
                               src={productItem.imageUrl}
                               alt={'product image'}

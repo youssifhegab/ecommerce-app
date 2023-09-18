@@ -11,7 +11,6 @@ import { getSizeName } from '@/lib/utils';
 
 export default function CommonDetails({ item }) {
   const { setComponentLevelLoader, componentLevelLoader, user, setShowCartModal } = useContext(GlobalContext);
-  console.log({ item });
   const [chosenSize, setChosenSize] = useState(item.sizes[0].id);
 
   async function handleAddToCart(getItem) {
@@ -37,12 +36,12 @@ export default function CommonDetails({ item }) {
   }
 
   return (
-    <section className="px-4 sm:px-6 lg:px-8 mb-6 mt-4">
-      <div className="flex px-52 w-full gap-36">
-        <div className="h-f h-[32rem] flex flex-shrink-0">
+    <>
+      <div className="flex lg:px-52 px-4 w-full lg:gap-36 gap-4 lg:flex-row flex-col h-full my-4">
+        <div className="lg:h-[32rem] h-80 flex flex-shrink-0">
           <img src={item.imageUrl} className="h-full w-full max-w-full object-cover rounded-md" alt="Product Details" />
         </div>
-        <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0 w-full">
+        <div className="px-4 lg:mt-16 lg:px-0 lg:mt-0 w-full">
           <h1 className="text-3xl font-bold tracking-tight">{item && item.name}</h1>
 
           <div className="mt-3">
@@ -89,6 +88,6 @@ export default function CommonDetails({ item }) {
         </div>
       </div>
       <Notification />
-    </section>
+    </>
   );
 }

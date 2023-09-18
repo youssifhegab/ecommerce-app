@@ -40,7 +40,6 @@ export default function ProductButton({ item }) {
     setComponentLevelLoader({ loading: true, id: getItem._id });
 
     const res = await addToCart({ productID: getItem._id, userID: user._id });
-    console.log({ res });
 
     if (res.success) {
       toast.success(res.message, {

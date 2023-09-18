@@ -179,11 +179,11 @@ export default function Checkout() {
   }
 
   return (
-    <div>
-      <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
-        <div className="px-4 pt-8">
+    <>
+      <div className="flex lg:flex-row flex-col-reverse lg:px-32 px-6 mb-4">
+        <div className="px-4 pt-8 w-full lg:w-1/2 gap-3 flex flex-col">
           <p className="font-medium text-xl">Cart Summary</p>
-          <div className="mt-8 space-y-3 rounded-lg border bg-background px-2 py-4 sm:px-5">
+          <div className="mt-8rounded-lg border bg-background px-2 py-4 sm:px-5">
             {cartItems && cartItems.length ? (
               cartItems.map(item => (
                 <div className="flex flex-col rounded-lg bg-background sm:flex-row" key={item._id}>
@@ -194,7 +194,7 @@ export default function Checkout() {
                   />
                   <div className="flex w-full flex-col px-4 py-4">
                     <span className="font-bold">{item && item.productID && item.productID.name}</span>
-                    <span className="font-semibold">{item && item.productID && item.productID.price}</span>
+                    <span className="font-semibold">{item && item.productID && item.productID.price} EGP</span>
                   </div>
                 </div>
               ))
@@ -202,38 +202,11 @@ export default function Checkout() {
               <div>Your cart is empty</div>
             )}
           </div>
-        </div>
-        <div className="mt-10 px-4 pt-8 lg:mt-0 gap-2 flex flex-col">
-          <p className="text-xl font-medium">Shipping address details</p>
-          <p className="font-bold">Complete your order by selecting address below</p>
-          <div className="w-full mt-6 mr-0 mb-0 ml-0 space-y-6">
-            {addresses && addresses.length ? (
-              addresses.map(item => (
-                <div
-                  onClick={() => handleSelectedAddress(item)}
-                  key={item._id}
-                  className={`border p-6 gap-2 flex flex-col ${item._id === selectedAddress ? 'border-red-900' : ''}`}
-                >
-                  <p>Name : {item.fullName}</p>
-                  <p>Address : {item.address}</p>
-                  <p>City : {item.city}</p>
-                  <p>Country : {item.country}</p>
-                  <p>PostalCode : {item.postalCode}</p>
-                  <Button>{item._id === selectedAddress ? 'Selected Address' : 'Select Address'}</Button>
-                </div>
-              ))
-            ) : (
-              <p>No addresses added</p>
-            )}
-          </div>
-          <div>
-            <Button onClick={() => router.push('/account')}>Add new address</Button>
-          </div>
           <div className="mt-6 border-t border-b py-2">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium">Subtotal</p>
               <p className="text-lg font-bold">
-                ${cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'}
+                {cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'} EGP
               </p>
             </div>
             <div className="flex items-center justify-between">
@@ -243,23 +216,48 @@ export default function Checkout() {
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium">Total</p>
               <p className="text-lg font-bold">
-                ${cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'}
+                {cartItems && cartItems.length ? cartItems.reduce((total, item) => item.productID.price + total, 0) : '0'} EGP
               </p>
             </div>
-            <div className="pb-10">
-              <Button
-                disabled={(cartItems && cartItems.length === 0) || Object.keys(checkoutFormData.shippingAddress).length === 0}
-                onClick={handleCheckout}
-                size="lg"
-                className="bg-violet-600 text-white"
-              >
-                Checkout
-              </Button>
-            </div>
+            <Button
+              disabled={(cartItems && cartItems.length === 0) || Object.keys(checkoutFormData.shippingAddress).length === 0}
+              onClick={handleCheckout}
+              size="lg"
+              className="bg-violet-600 text-white mt-2 w-full hover:bg-violet-800"
+            >
+              Checkout
+            </Button>
           </div>
+        </div>
+        <div className="mt-10 px-4 pt-8 lg:mt-0 gap-2 flex flex-col w-full lg:w-1/2">
+          <p className="text-xl font-medium">Shipping address details</p>
+          <p className="font-bold">Complete your order by selecting address below</p>
+          <div className="w-full mt-6 mr-0 mb-4 ml-0 space-y-6">
+            {addresses && addresses.length ? (
+              addresses.map(item => (
+                <div
+                  onClick={() => handleSelectedAddress(item)}
+                  key={item._id}
+                  className={`border p-6 gap-2 flex flex-col ${item._id === selectedAddress ? 'border-violet-600' : ''}`}
+                >
+                  <p>Name : {item.fullName}</p>
+                  <p>Address : {item.address}</p>
+                  <p>City : {item.city}</p>
+                  <p>Country : {item.country}</p>
+                  <p>PostalCode : {item.postalCode}</p>
+                  <Button className={item._id === selectedAddress ? 'bg-violet-600 text-white hover:bg-violet-800' : null}>
+                    {item._id === selectedAddress ? 'Selected Address' : 'Select Address'}
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <p>No addresses added</p>
+            )}
+          </div>
+          <Button onClick={() => router.push('/account')}>Add new address</Button>
         </div>
       </div>
       <Notification />
-    </div>
+    </>
   );
 }
