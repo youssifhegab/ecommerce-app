@@ -6,7 +6,7 @@ const configOptions = {
 };
 
 const connectToDb = async () => {
-  const connectionUrl = 'mongodb+srv://youssifhegab:Welcome123@nextjs-ecommerce.r1tuev7.mongodb.net/';
+  const connectionUrl = process.env.NEXT_PUBLIC_SANITY_DATASET;
   mongoose
     .connect(connectionUrl, configOptions)
     .then(() => console.log('Ecommerce database connected successfully!'))

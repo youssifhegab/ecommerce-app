@@ -9,7 +9,6 @@ export async function GET() {
     await connectToDb();
 
     const extractAllproducts = await Product.find();
-    console.log({ extractAllproducts });
 
     if (extractAllproducts) {
       return NextResponse.json({

@@ -39,64 +39,6 @@ export const adminNavOptions = [
   },
 ];
 
-export const registrationFormControls = [
-  {
-    id: 'name',
-    type: 'text',
-    placeholder: 'Enter your name',
-    label: 'Name',
-    componentType: 'input',
-  },
-  {
-    id: 'email',
-    type: 'email',
-    placeholder: 'Enter your email',
-    label: 'Email',
-    componentType: 'input',
-  },
-  {
-    id: 'password',
-    type: 'password',
-    placeholder: 'Enter your password',
-    label: 'Password',
-    componentType: 'input',
-  },
-  {
-    id: 'role',
-    type: '',
-    placeholder: '',
-    label: 'Role',
-    componentType: 'select',
-    options: [
-      {
-        id: 'admin',
-        label: 'Admin',
-      },
-      {
-        id: 'customer',
-        label: 'customer',
-      },
-    ],
-  },
-];
-
-export const loginFormControls = [
-  {
-    id: 'email',
-    type: 'email',
-    placeholder: 'Enter your email',
-    label: 'Email',
-    componentType: 'input',
-  },
-  {
-    id: 'password',
-    type: 'password',
-    placeholder: 'Enter your password',
-    label: 'Password',
-    componentType: 'input',
-  },
-];
-
 export const adminAddProductformControls = [
   {
     id: 'name',
@@ -173,21 +115,6 @@ export const adminAddProductformControls = [
   },
 ];
 
-export const AvailableSizes = [
-  {
-    id: 's',
-    label: 'S',
-  },
-  {
-    id: 'm',
-    label: 'M',
-  },
-  {
-    id: 'l',
-    label: 'L',
-  },
-];
-
 export const firebaseConfig = {
   apiKey: 'AIzaSyD0QUDUxVtc83As6oE-GySPc9cYQ3kVsIw',
   authDomain: 'ecommerce-21ef5.firebaseapp.com',
@@ -198,7 +125,7 @@ export const firebaseConfig = {
   measurementId: 'G-XVQ2HCK9GX',
 };
 
-export const firebaseStroageURL = 'gs://ecommerce-21ef5.appspot.com';
+export const firebaseStorageURL = process.env.NEXT_PUBLIC_FIREBASE_STORAGE;
 
 export const addNewAddressFormControls = [
   {

@@ -1,7 +1,8 @@
 'use client';
 
 import ComponentLevelLoader from '@/components/Loader';
-import { GlobalContext } from '@/context';
+import { Button } from '@/components/UIComponents/Button';
+import { GlobalContext } from '@/context/GlobalState';
 import { addToCart } from '@/services/cart';
 import { deleteAProduct } from '@/services/product';
 import { usePathname, useRouter } from 'next/navigation';
@@ -10,8 +11,7 @@ import { toast } from 'react-toastify';
 
 export default function ProductButton({ item }) {
   const pathName = usePathname();
-  const { setCurrentUpdatedProduct, setComponentLevelLoader, componentLevelLoader, user, setShowCartModal } =
-    useContext(GlobalContext);
+  const { setComponentLevelLoader, componentLevelLoader, user, setShowCartModal } = useContext(GlobalContext);
   const router = useRouter();
 
   const isAdminView = pathName.includes('admin-view');
@@ -45,6 +45,7 @@ export default function ProductButton({ item }) {
         position: toast.POSITION.TOP_RIGHT,
       });
       setComponentLevelLoader({ loading: false, id: '' });
+      localStorage.setItem('cartItems', JSON.stringify(res.cartProducts));
       setShowCartModal(true);
     } else {
       toast.error(res.message, {
@@ -53,24 +54,23 @@ export default function ProductButton({ item }) {
       setComponentLevelLoader({ loading: false, id: '' });
       setShowCartModal(true);
     }
-
-    console.log(res);
   }
 
   return isAdminView ? (
-    <>
-      <button
+    <div className="flex flex-col w-full gap-2">
+      <Button
         onClick={() => {
-          setCurrentUpdatedProduct(item);
-          router.push('/admin-view/add-product');
+          router.push(`/admin-view/add-product?item=${encodeURIComponent(JSON.stringify(item))}`);
         }}
-        className="mt-1.5 flex w-full justify-center bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
+        type="button"
+        className="w-full bg-violet-600 py-6 text-base font-medium text-white hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
       >
         Update
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => handleDeleteProduct(item)}
-        className="mt-1.5 flex w-full justify-center bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
+        type="button"
+        className="w-full bg-violet-600 py-6 text-base font-medium text-white hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
       >
         {componentLevelLoader && componentLevelLoader.loading && item._id === componentLevelLoader.id ? (
           <ComponentLevelLoader
@@ -81,13 +81,14 @@ export default function ProductButton({ item }) {
         ) : (
           'DELETE'
         )}
-      </button>
-    </>
+      </Button>
+    </div>
   ) : (
     <>
-      <button
+      <Button
         onClick={() => handleAddToCart(item)}
-        className="mt-1.5 flex w-full justify-center bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
+        type="button"
+        className="w-full bg-violet-600 py-6 text-base font-medium text-white hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
       >
         {componentLevelLoader && componentLevelLoader.loading && componentLevelLoader.id === item._id ? (
           <ComponentLevelLoader
@@ -98,7 +99,7 @@ export default function ProductButton({ item }) {
         ) : (
           'Add To Cart'
         )}
-      </button>
+      </Button>
     </>
   );
 }

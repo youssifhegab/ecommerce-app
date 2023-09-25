@@ -29,14 +29,10 @@ export async function POST(req) {
         });
       }
 
-      console.log(productID, userID);
-
       const isCurrentCartItemAlreadyExists = await Cart.find({
         productID: productID,
         userID: userID,
       });
-
-      console.log(isCurrentCartItemAlreadyExists);
 
       if (isCurrentCartItemAlreadyExists?.length > 0) {
         return NextResponse.json({
@@ -46,13 +42,14 @@ export async function POST(req) {
       }
 
       const saveProductToCart = await Cart.create(data);
-
-      console.log(saveProductToCart);
+      const extractAllCartItems = await Cart.find({ userID }).populate('productID');
+      const cartProducts = extractAllCartItems.filter(item => !!item.productID);
 
       if (saveProductToCart) {
         return NextResponse.json({
           success: true,
           message: 'Product is added to cart !',
+          cartProducts,
         });
       } else {
         return NextResponse.json({

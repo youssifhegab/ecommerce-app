@@ -1,21 +1,21 @@
 'use client';
 
 import CommonCart from '@/components/CommonCart';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { deleteFromCart, getAllCartItems } from '@/services/cart';
 import { useContext, useEffect } from 'react';
 import { PulseLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 
 export default function Cart() {
-  const { user, setCartItems, cartItems, pageLevelLoader, setPageLevelLoader, setComponentLevelLoader, componentLevelLoader } =
+  const { user, pageLevelLoader, setPageLevelLoader, setComponentLevelLoader, componentLevelLoader } =
     useContext(GlobalContext);
 
   async function extractAllCartItems() {
     setPageLevelLoader(true);
     const res = await getAllCartItems(user?._id);
 
-    if (res.success) {
+    if (res?.success) {
       const updatedData =
         res.data && res.data.length
           ? res.data.map(item => ({
@@ -29,12 +29,9 @@ export default function Cart() {
               },
             }))
           : [];
-      setCartItems(updatedData);
       setPageLevelLoader(false);
       localStorage.setItem('cartItems', JSON.stringify(updatedData));
     }
-
-    console.log(res);
   }
 
   useEffect(() => {
@@ -64,12 +61,10 @@ export default function Cart() {
   if (pageLevelLoader) {
     return (
       <div className="w-full min-h-screen flex justify-center items-center">
-        <PulseLoader color={'#000000'} loading={pageLevelLoader} size={30} data-testid="loader" />
+        <PulseLoader loading={pageLevelLoader} size={30} data-testid="loader" />
       </div>
     );
   }
 
-  return (
-    <CommonCart componentLevelLoader={componentLevelLoader} handleDeleteCartItem={handleDeleteCartItem} cartItems={cartItems} />
-  );
+  return <CommonCart componentLevelLoader={componentLevelLoader} handleDeleteCartItem={handleDeleteCartItem} />;
 }

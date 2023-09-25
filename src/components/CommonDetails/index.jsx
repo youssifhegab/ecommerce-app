@@ -1,14 +1,17 @@
 'use client';
 
-import { GlobalContext } from '@/context';
-import { useContext } from 'react';
+import { GlobalContext } from '@/context/GlobalState';
+import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import ComponentLevelLoader from '../Loader';
 import { addToCart } from '@/services/cart';
 import Notification from '../Notification';
+import { Button } from '../UIComponents/Button';
+import { getSizeName } from '@/lib/utils';
 
 export default function CommonDetails({ item }) {
   const { setComponentLevelLoader, componentLevelLoader, user, setShowCartModal } = useContext(GlobalContext);
+  const [chosenSize, setChosenSize] = useState(item.sizes[0].id);
 
   async function handleAddToCart(getItem) {
     setComponentLevelLoader({ loading: true, id: '' });
@@ -20,6 +23,8 @@ export default function CommonDetails({ item }) {
         position: toast.POSITION.TOP_RIGHT,
       });
       setComponentLevelLoader({ loading: false, id: '' });
+      console.log({ res });
+      localStorage.setItem('cartItems', JSON.stringify(res.cartProducts));
       setShowCartModal(true);
     } else {
       toast.error(res.message, {
@@ -31,82 +36,58 @@ export default function CommonDetails({ item }) {
   }
 
   return (
-    <section className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto px-4">
-        <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
-          <div className="lg:col-span-3 lg:row-end-1">
-            <div className="lg:flex lg:items-start">
-              <div className="lg:order-2 lg:ml-5">
-                <div className="max-w-xl overflow-hidden rounded-lg">
-                  <img src={item.imageUrl} className="h-full w-full max-w-full object-cover" alt="Product Details" />
-                </div>
-              </div>
-              <div className="mt-2 w-full lg:order-1 lg:w-32 lg:flex-shrink-0">
-                <div className="flex flex-row items-start lg:flex-col">
-                  <button
-                    type="button"
-                    className="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-gray-100 text-center"
-                  >
-                    <img src={item.imageUrl} className="h-full w-full object-cover" alt="Product Details" />
-                  </button>
-                  <button
-                    type="button"
-                    className="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-gray-100 text-center"
-                  >
-                    <img src={item.imageUrl} className="h-full w-full object-cover" alt="Product Details" />
-                  </button>
-                </div>
-              </div>
-            </div>
+    <>
+      <div className="flex lg:px-52 px-4 w-full lg:gap-36 gap-4 lg:flex-row flex-col h-full my-4">
+        <div className="lg:h-[32rem] h-80 flex flex-shrink-0">
+          <img src={item.imageUrl} className="h-full w-full max-w-full object-cover rounded-md" alt="Product Details" />
+        </div>
+        <div className="px-4 lg:mt-16 lg:px-0 w-full">
+          <h1 className="text-3xl font-bold tracking-tight">{item && item.name}</h1>
+
+          <div className="mt-3">
+            <h2 className="sr-only">Product information</h2>
+            <p className="text-3xl tracking-tight">{item && item.price} EGP</p>
           </div>
-          <div className="lg:col-span-2 lg:row-span-2 lg:row-end-2">
-            <h1 className="text-2xl font-bold text-gray-900">{item && item.name}</h1>
-            <div className="mt-10 flex flex-col items-center justify-between space-y-4 botder-t border-b py-4 sm:flex-row sm:space-y-0">
-              <div className="flex items-end">
-                <h1 className={`text-3xl font-bold mr-2 ${item.onSale === 'yes' ? 'line-through' : ''}`}>
-                  ${item && item.price}
-                </h1>
-                {item.onSale === 'yes' ? (
-                  <h1 className="text-3xl font-bold text-red-700">{`$${(
-                    item.price -
-                    item.price * (item.priceDrop / 100)
-                  ).toFixed(2)}`}</h1>
-                ) : null}
-              </div>
-              <button
-                type="button"
-                onClick={() => handleAddToCart(item)}
-                className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium tracking-wide uppercase text-white"
+
+          <div className="mt-6">
+            <h3 className="sr-only">Description</h3>
+            <div className="space-y-6 text-base">{item && item.description}</div>
+          </div>
+
+          <div className="mt-4">
+            <p>
+              Size: <strong>{getSizeName(chosenSize)}</strong>
+            </p>
+            {item?.sizes?.map(size => (
+              <Button
+                key={size.id}
+                variant={chosenSize === size ? 'default' : 'outline'}
+                onClick={() => setChosenSize(size)}
+                className="mr-2 mt-4"
               >
-                {componentLevelLoader && componentLevelLoader.loading ? (
-                  <ComponentLevelLoader
-                    text={'Adding to Cart'}
-                    color={'#ffffff'}
-                    loading={componentLevelLoader && componentLevelLoader.loading}
-                  />
-                ) : (
-                  'Add to Cart'
-                )}
-              </button>
-            </div>
-            <ul className="mt-8 space-y-2">
-              <li className="flex items-center text-left text-sm font-medium text-gray-600">{item && item.deliveryInfo}</li>
-              <li className="flex items-center text-left text-sm font-medium text-gray-600">{'Cancel anytime'}</li>
-            </ul>
-            <div className="lg:col-span-3">
-              <div className="border-b border-gray-400">
-                <nav className="flex gap-4">
-                  <a href="#" className="border-b-2 border-gray-900 py-4 text-sm font-medium text-gray-900">
-                    Description
-                  </a>
-                </nav>
-              </div>
-              <div className="mt-8 flow-root sm:mt-12">{item && item.description}</div>
-            </div>
+                {getSizeName(size)}
+              </Button>
+            ))}
           </div>
+
+          <Button
+            onClick={() => handleAddToCart(item)}
+            type="button"
+            className="w-full mt-6 bg-violet-600 py-6 text-base font-medium text-white hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
+          >
+            {componentLevelLoader && componentLevelLoader.loading ? (
+              <ComponentLevelLoader
+                text={'Adding to Cart'}
+                color={'#ffffff'}
+                loading={componentLevelLoader && componentLevelLoader.loading}
+              />
+            ) : (
+              'Add to Cart'
+            )}
+          </Button>
         </div>
       </div>
       <Notification />
-    </section>
+    </>
   );
 }

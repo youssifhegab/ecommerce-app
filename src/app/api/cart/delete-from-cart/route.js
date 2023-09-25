@@ -12,6 +12,7 @@ export async function DELETE(req) {
     if (isAuthUser) {
       const { searchParams } = new URL(req.url);
       const id = searchParams.get('id');
+      const userID = searchParams.get('userID');
       if (!id)
         return NextResponse.json({
           success: false,
@@ -19,11 +20,14 @@ export async function DELETE(req) {
         });
 
       const deleteCartItem = await Cart.findByIdAndDelete(id);
+      const extractAllCartItems = await Cart.find({ userID }).populate('productID');
+      const cartProducts = extractAllCartItems.filter(item => !!item.productID);
 
       if (deleteCartItem) {
         return NextResponse.json({
           success: true,
           message: 'Cart Item deleted successfully',
+          cartProducts,
         });
       } else {
         return NextResponse.json({
@@ -38,6 +42,7 @@ export async function DELETE(req) {
       });
     }
   } catch (error) {
+    console.log(error);
     return NextResponse.json({
       success: false,
       message: 'Something went wrong ! Please try again',

@@ -1,27 +1,20 @@
 'use client';
 
 import ComponentLevelLoader from '@/components/Loader';
-import { GlobalContext } from '@/context';
+import { GlobalContext } from '@/context/GlobalState';
 import { getAllOrdersForAllUsers, updateStatusOfOrder } from '@/services/order';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PulseLoader } from 'react-spinners';
 
 export default function AdminView() {
-  const {
-    allOrdersForAllUsers,
-    setAllOrdersForAllUsers,
-    user,
-    pageLevelLoader,
-    setPageLevelLoader,
-    componentLevelLoader,
-    setComponentLevelLoader,
-  } = useContext(GlobalContext);
+  const { user, pageLevelLoader, setPageLevelLoader, componentLevelLoader, setComponentLevelLoader } =
+    useContext(GlobalContext);
+
+  const [allOrdersForAllUsers, setAllOrdersForAllUsers] = useState([]);
 
   async function extractAllOrdersForAllUsers() {
     setPageLevelLoader(true);
     const res = await getAllOrdersForAllUsers();
-
-    console.log({ inside: res });
 
     if (res.success) {
       setPageLevelLoader(false);
@@ -34,8 +27,6 @@ export default function AdminView() {
   useEffect(() => {
     if (user !== null) extractAllOrdersForAllUsers();
   }, [user]);
-
-  console.log({ allOrdersForAllUsers });
 
   async function handleUpdateOrderStatus(getItem) {
     setComponentLevelLoader({ loading: true, id: getItem._id });

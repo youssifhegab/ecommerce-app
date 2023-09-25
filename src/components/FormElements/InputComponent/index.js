@@ -1,13 +1,11 @@
-export default function InputComponent({ label, placeholder, onChange, value, type }) {
+export default function InputComponent({ label, register, ...props }) {
   return (
     <div className="relative">
-      <p className=" pt-0 pr-2 pb-0 pl-2 absolute -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 bg-white">{label}</p>
+      <p className="py-0 px-1 absolute -mt-3 mr-0 mb-0 ml-2 font-medium bg-background">{label}</p>
       <input
-        placeholder={placeholder}
-        type={type || 'text'}
-        value={value}
-        onChange={onChange}
-        className="border placeholder-gray-400 focus:outline-none focus:border-black w-full pt-4 pr-4 pb-4 pl-4 mr-0 mt-0 ml-0 text-base block bg-white border-gray-300 rounded-md"
+        className="border focus:outline-none focus:border-black w-full p-4 mx-0 mt-0 text-base block bg-background border-secondary-foreground focus:border-secondary-foreground rounded-md"
+        {...props}
+        {...register}
       />
     </div>
   );
