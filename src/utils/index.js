@@ -115,21 +115,6 @@ export const adminAddProductformControls = [
   },
 ];
 
-export const AvailableSizes = [
-  {
-    id: 's',
-    label: 'S',
-  },
-  {
-    id: 'm',
-    label: 'M',
-  },
-  {
-    id: 'l',
-    label: 'L',
-  },
-];
-
 export const firebaseConfig = {
   apiKey: 'AIzaSyD0QUDUxVtc83As6oE-GySPc9cYQ3kVsIw',
   authDomain: 'ecommerce-21ef5.firebaseapp.com',
@@ -140,7 +125,7 @@ export const firebaseConfig = {
   measurementId: 'G-XVQ2HCK9GX',
 };
 
-export const firebaseStroageURL = 'gs://ecommerce-21ef5.appspot.com';
+export const firebaseStorageURL = process.env.NEXT_PUBLIC_FIREBASE_STORAGE;
 
 export const addNewAddressFormControls = [
   {

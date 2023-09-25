@@ -15,16 +15,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 export default function Register() {
   const [isRegistered, setIsRegistered] = useState(false);
   const { componentLevelLoader, setComponentLevelLoader, isAuthUser } = useContext(GlobalContext);
-  console.log({ componentLevelLoader });
 
-  const { register, handleSubmit, getValues, setValue } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
 
   const router = useRouter();
 
   const handleRegisterOnSubmit = async data => {
     setComponentLevelLoader({ loading: true, id: '' });
     const res = await registerNewUser(data);
-    console.log({ data, getValues: getValues() });
 
     if (res.success) {
       toast.success(res.message, {

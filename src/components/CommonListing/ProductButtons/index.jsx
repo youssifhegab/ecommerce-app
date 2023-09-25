@@ -11,8 +11,7 @@ import { toast } from 'react-toastify';
 
 export default function ProductButton({ item }) {
   const pathName = usePathname();
-  const { setCurrentUpdatedProduct, setComponentLevelLoader, componentLevelLoader, user, setShowCartModal } =
-    useContext(GlobalContext);
+  const { setComponentLevelLoader, componentLevelLoader, user, setShowCartModal } = useContext(GlobalContext);
   const router = useRouter();
 
   const isAdminView = pathName.includes('admin-view');
@@ -58,11 +57,10 @@ export default function ProductButton({ item }) {
   }
 
   return isAdminView ? (
-    <>
+    <div className="flex flex-col w-full gap-2">
       <Button
         onClick={() => {
-          setCurrentUpdatedProduct(item);
-          router.push('/admin-view/add-product');
+          router.push(`/admin-view/add-product?item=${encodeURIComponent(JSON.stringify(item))}`);
         }}
         type="button"
         className="w-full bg-violet-600 py-6 text-base font-medium text-white hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
@@ -84,7 +82,7 @@ export default function ProductButton({ item }) {
           'DELETE'
         )}
       </Button>
-    </>
+    </div>
   ) : (
     <>
       <Button

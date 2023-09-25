@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { ShoppingBag, User, Menu } from 'lucide-react';
@@ -13,17 +13,12 @@ import { Button } from '../UIComponents/Button';
 import { adminNavOptions, navOptions } from '@/utils';
 
 const Navbar = () => {
-  const { isAuthUser, setIsAuthUser, setUser, currentUpdatedProduct, setCurrentUpdatedProduct, setShowCartModal } =
-    useContext(GlobalContext);
+  const { isAuthUser, setIsAuthUser, setUser, setShowCartModal } = useContext(GlobalContext);
 
   const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
   const pathName = usePathname();
   const router = useRouter();
-
-  useEffect(() => {
-    if (pathName !== '/admin-view/add-product' && currentUpdatedProduct !== null) setCurrentUpdatedProduct(null);
-  }, [pathName]);
 
   function handleLogout() {
     setIsAuthUser(false);

@@ -1,21 +1,25 @@
 'use client';
 
+import { initializeApp } from 'firebase/app';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useContext, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/UIComponents/Select';
+
 import InputComponent from '@/components/FormElements/InputComponent';
-import SelectComponent from '@/components/FormElements/SelectComponent';
-import TileComponent from '@/components/FormElements/TileComponent';
+// import TileComponent from '@/components/FormElements/TileComponent';
 import ComponentLevelLoader from '@/components/Loader';
 import Notification from '@/components/Notification';
 import { GlobalContext } from '@/context/GlobalState';
 import { addNewProduct, updateAProduct } from '@/services/product';
-import { AvailableSizes, adminAddProductformControls, firebaseConfig, firebaseStroageURL } from '@/utils';
-import { initializeApp } from 'firebase/app';
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { useRouter } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { firebaseConfig, firebaseStorageURL } from '@/utils';
+import { Button } from '@/components/UIComponents/Button';
+import { getSizeName } from '@/lib/utils';
 
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app, firebaseStroageURL);
+const storage = getStorage(app, firebaseStorageURL);
 
 const createUniqueFileName = getFile => {
   const timeStamp = Date.now();
@@ -45,61 +49,37 @@ async function helperForUPloadingImageToFirebase(file) {
     );
   });
 }
-
-const initialFormData = {
-  name: '',
-  price: 0,
-  description: '',
-  category: 'men',
-  sizes: [],
-  deliveryInfo: '',
-  onSale: 'no',
-  imageUrl: '',
-  priceDrop: 0,
-};
+const sizesList = [{ id: 's' }, { id: 'm' }, { id: 'l' }];
 
 export default function AdminAddNewProduct() {
-  const [formData, setFormData] = useState(initialFormData);
-
-  const { componentLevelLoader, setComponentLevelLoader, currentUpdatedProduct, setCurrentUpdatedProduct } =
-    useContext(GlobalContext);
-
+  const params = useSearchParams();
   const router = useRouter();
+  const { componentLevelLoader, setComponentLevelLoader } = useContext(GlobalContext);
+  const [sizes, setSizes] = useState([]);
 
-  useEffect(() => {
-    if (currentUpdatedProduct !== null) setFormData(currentUpdatedProduct);
-  }, [currentUpdatedProduct]);
+  const productUpdateDetails = JSON.parse(decodeURIComponent(params.get('item')));
+  const { register, handleSubmit, setValue, getValues } = useForm({
+    defaultValues: productUpdateDetails || {
+      name: '',
+      price: 0,
+      description: '',
+      category: 'men',
+      sizes: [],
+      deliveryInfo: '',
+      onSale: 'no',
+      priceDrop: 0,
+      image: '',
+    },
+  });
 
-  async function handleImage(event) {
-    const extractImageUrl = await helperForUPloadingImageToFirebase(event.target.files[0]);
-
-    if (extractImageUrl !== '') {
-      setFormData({
-        ...formData,
-        imageUrl: extractImageUrl,
-      });
-    }
-  }
-
-  function handleTileClick(getCurrentItem) {
-    let cpySizes = [...formData.sizes];
-    const index = cpySizes.findIndex(item => item.id === getCurrentItem.id);
-
-    if (index === -1) {
-      cpySizes.push(getCurrentItem);
-    } else {
-      cpySizes = cpySizes.filter(item => item.id !== getCurrentItem.id);
-    }
-
-    setFormData({
-      ...formData,
-      sizes: cpySizes,
-    });
-  }
-
-  async function handleAddProduct() {
+  const handleAddProduct = async data => {
+    const { image, ...restData } = data;
+    const extractImageUrl = await helperForUPloadingImageToFirebase(image[0]);
     setComponentLevelLoader({ loading: true, id: '' });
-    const res = currentUpdatedProduct !== null ? await updateAProduct(formData) : await addNewProduct(formData);
+    const res =
+      productUpdateDetails !== null
+        ? await updateAProduct({ ...restData, imageUrl: extractImageUrl || '', sizes })
+        : await addNewProduct({ ...restData, imageUrl: extractImageUrl || '', sizes });
 
     if (res.success) {
       setComponentLevelLoader({ loading: false, id: '' });
@@ -107,76 +87,84 @@ export default function AdminAddNewProduct() {
         position: toast.POSITION.TOP_RIGHT,
       });
 
-      setFormData(initialFormData);
-      setCurrentUpdatedProduct(null);
-      setTimeout(() => {
-        router.push('/admin-view/all-products');
-      }, 1000);
+      router.push('/admin-view/all-products');
     } else {
       toast.error(res.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
       setComponentLevelLoader({ loading: false, id: '' });
-      setFormData(initialFormData);
     }
-  }
+  };
+
+  console.log({ getValues: getValues() });
 
   return (
-    <div className="w-full mt-5 mr-0 mb-0 ml-0 relative">
+    <div className="w-full mr-0 mb-0 ml-0 relative">
       <div className="flex flex-col items-start justify-start p-10 bg-background shadow-2xl rounded-xl relative">
-        <div className="w-full mt-6 mr-0 mb-0 ml-0 space-y-8">
-          <input accept="image/*" max="1000000" type="file" onChange={handleImage} />
+        <form onSubmit={handleSubmit(handleAddProduct)} className="w-full mt-6 mr-0 mb-0 ml-0 space-y-8">
+          <input accept="image/*" max="1000000" type="file" {...register('image')} />
 
           <div className="flex gap-2 flex-col">
             <label>Available sizes</label>
-            <TileComponent selected={formData.sizes} onClick={handleTileClick} data={AvailableSizes} />
+            <div className="flex gap-2">
+              {sizesList.map(size => (
+                <Button
+                  type="button"
+                  key={size.id}
+                  variant={sizes.includes(size.id) ? 'default' : 'outline'}
+                  onClick={() => {
+                    setSizes(prevSizes =>
+                      sizes.includes(size.id) ? prevSizes.filter(size => size !== size.id) : [...prevSizes, size.id],
+                    );
+                  }}
+                >
+                  {getSizeName(size.id)}
+                </Button>
+              ))}
+            </div>
           </div>
-          {adminAddProductformControls.map(controlItem =>
-            controlItem.componentType === 'input' ? (
-              <InputComponent
-                key={controlItem.id}
-                type={controlItem.type}
-                placeholder={controlItem.placeholder}
-                label={controlItem.label}
-                value={formData[controlItem.id]}
-                onChange={event => {
-                  setFormData({
-                    ...formData,
-                    [controlItem.id]: event.target.value,
-                  });
-                }}
-              />
-            ) : controlItem.componentType === 'select' ? (
-              <SelectComponent
-                label={controlItem.label}
-                options={controlItem.options}
-                value={formData[controlItem.id]}
-                onChange={event => {
-                  setFormData({
-                    ...formData,
-                    [controlItem.id]: event.target.value,
-                  });
-                }}
-              />
-            ) : null,
-          )}
-          <button
-            onClick={handleAddProduct}
-            className="inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg text-white font-medium uppercase tracking-wide"
-          >
+          <InputComponent placeholder="Enter Product name" label="Name" register={{ ...register('name') }} />
+          <InputComponent placeholder="Enter price" label="Price" type="number" register={{ ...register('price') }} />
+          <InputComponent placeholder="Enter description" label="Description" register={{ ...register('description') }} />
+          <Select value={getValues().category} onValueChange={e => setValue('category', e)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="men">Men</SelectItem>
+              <SelectItem value="women">Women</SelectItem>
+              <SelectItem value="kids">Kids</SelectItem>
+            </SelectContent>
+          </Select>
+          <InputComponent placeholder="Enter delivery info" label="Delivery Info" register={{ ...register('deliveryInfo') }} />
+          <Select value={getValues().onSale} onValueChange={e => setValue('onSale', e)}>
+            <SelectTrigger>
+              <SelectValue placeholder="On Sale" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="yes">Yes</SelectItem>
+              <SelectItem value="no">No</SelectItem>
+            </SelectContent>
+          </Select>
+          <InputComponent
+            placeholder="Enter Price Drop"
+            label="Price Drop"
+            type="number"
+            register={{ ...register('priceDrop') }}
+          />
+          <Button type="submit">
             {componentLevelLoader && componentLevelLoader.loading ? (
               <ComponentLevelLoader
-                text={currentUpdatedProduct !== null ? 'Updating Product' : 'Adding Product'}
-                color={'#ffffff'}
+                text={productUpdateDetails !== null ? 'Updating Product' : 'Adding Product'}
                 loading={componentLevelLoader && componentLevelLoader.loading}
               />
-            ) : currentUpdatedProduct !== null ? (
+            ) : productUpdateDetails !== null ? (
               'Update Product'
             ) : (
               'Add Product'
             )}
-          </button>
-        </div>
+          </Button>
+        </form>
       </div>
       <Notification />
     </div>

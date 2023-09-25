@@ -1,9 +1,7 @@
 import AuthUser from '@/middleware/AuthUser';
 import { NextResponse } from 'next/server';
 
-const stripe = require('stripe')(
-  'sk_test_51NpIBOKJgXW4QDgf9MCEEgbE77ARJLG7s5wzLpuZ98T43mOV22jAfiwkITdeNyRyIO3r0XZplreEiQpJZYpfIzAz00Gf0Rz8zF',
-);
+const stripe = require('stripe')(process.env.NEXT_PUBLIC_PRIVATE_KEY);
 
 export const dynamic = 'force-dynamic';
 

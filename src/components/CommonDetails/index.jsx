@@ -41,7 +41,7 @@ export default function CommonDetails({ item }) {
         <div className="lg:h-[32rem] h-80 flex flex-shrink-0">
           <img src={item.imageUrl} className="h-full w-full max-w-full object-cover rounded-md" alt="Product Details" />
         </div>
-        <div className="px-4 lg:mt-16 lg:px-0 lg:mt-0 w-full">
+        <div className="px-4 lg:mt-16 lg:px-0 w-full">
           <h1 className="text-3xl font-bold tracking-tight">{item && item.name}</h1>
 
           <div className="mt-3">
@@ -61,11 +61,11 @@ export default function CommonDetails({ item }) {
             {item?.sizes?.map(size => (
               <Button
                 key={size.id}
-                variant={chosenSize === size.id ? 'default' : 'outline'}
-                onClick={() => setChosenSize(size.id)}
+                variant={chosenSize === size ? 'default' : 'outline'}
+                onClick={() => setChosenSize(size)}
                 className="mr-2 mt-4"
               >
-                {getSizeName(size.id)}
+                {getSizeName(size)}
               </Button>
             ))}
           </div>

@@ -18,7 +18,6 @@ export default function GlobalStateProvider({ children }) {
   });
   const [isAuthUser, setIsAuthUser] = useState(null);
   const [user, setUser] = useState(null);
-  const [currentUpdatedProduct, setCurrentUpdatedProduct] = useState(null);
   const [showCartModal, setShowCartModal] = useState(false);
   const [addresses, setAddresses] = useState([]);
 
@@ -70,8 +69,6 @@ export default function GlobalStateProvider({ children }) {
         setUser,
         componentLevelLoader,
         setComponentLevelLoader,
-        currentUpdatedProduct,
-        setCurrentUpdatedProduct,
         showCartModal,
         setShowCartModal,
         addresses,
