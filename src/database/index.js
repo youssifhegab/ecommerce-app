@@ -6,7 +6,7 @@ const configOptions = {
 };
 
 const connectToDb = async () => {
-  const connectionUrl = process.env.NEXT_PUBLIC_SANITY_DATASET;
+  const connectionUrl = process.env.NEXT_PUBLIC_MONGO_DATABASE;
   mongoose
     .connect(connectionUrl, configOptions)
     .then(() => console.log('Ecommerce database connected successfully!'))
