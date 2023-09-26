@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/UIComponents/Select';
 
 import InputComponent from '@/components/FormElements/InputComponent';
-// import TileComponent from '@/components/FormElements/TileComponent';
 import ComponentLevelLoader from '@/components/Loader';
 import Notification from '@/components/Notification';
 import { GlobalContext } from '@/context/GlobalState';
@@ -95,8 +94,6 @@ export default function AdminAddNewProduct() {
       setComponentLevelLoader({ loading: false, id: '' });
     }
   };
-
-  console.log({ getValues: getValues() });
 
   return (
     <div className="w-full mr-0 mb-0 ml-0 relative">
